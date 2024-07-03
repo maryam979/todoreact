@@ -7,6 +7,6 @@ export const apiGetTodos = ()=>{
 export const apiPostTodo = (data:API.TodoCreateForm)=>{
     return axiosInterceptor.post<API.Todo>('/core/todos/',data);
 }
-export const apiDeleteTodo = (id: number): Promise<void> => {
+export const apiDeleteTodo = (id: number) => {
     return axiosInterceptor.delete(`/core/todos/${id}`);
 };

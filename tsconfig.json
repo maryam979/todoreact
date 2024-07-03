@@ -1,7 +1,18 @@
 {
   "compilerOptions": {
-    // Your existing compiler options
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsxImportSource": "react"
   },
-  "include": ["src/**/*", "types.d.ts"]
+  "include": ["src/**/*"],
+  // "exclude": ["node_modules", "dist"]
 }
