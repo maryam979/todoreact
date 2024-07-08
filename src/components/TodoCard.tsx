@@ -1,36 +1,44 @@
 import React, { useState } from 'react';
 import { Card, Button, Popover, ConfigProvider, Modal, notification } from 'antd';
 import { MoreOutlined, DeleteOutlined, SmileOutlined } from '@ant-design/icons';
-
-import { apiDeleteTodo } from '../services/todos/api'
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 type TodoCardProps = {
   instance: API.Todo;
   fetchData: () => void;
   onDeleteClick?: () => void;
+  onUpdateClick?: () => void;
 };
 
 
 
 const TodoCard = (props: TodoCardProps) => {
 
-const [open,setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false)
 
 
   const content = (
     <div className='flex flex-col gap-2'>
       <Button onClick={() => {
-        if(props.onDeleteClick)
+        if (props.onDeleteClick)
           props.onDeleteClick()
       }}><DeleteOutlined /> Delete</Button>
-      <Button ><SmileOutlined /> update</Button>
+      <Button onClick={() => {
+        if (props.onUpdateClick)
+          props.onUpdateClick()
+      }}
+
+      ><SmileOutlined /> update</Button>
     </div>
   );
 
 
 
   return (
-    <Card title={props.instance.title}>
+    <Card
+    title={props.instance.title}  extra={<Link to={`/todo/${props.instance.id}`}><ArrowRightOutlined /></Link>}
+  >
       <p>{props.instance.content}</p>
       <ConfigProvider>
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>

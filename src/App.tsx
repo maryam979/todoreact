@@ -1,73 +1,61 @@
-
-
 import React from 'react';
-import { apiGetTodos, apiDeleteTodo } from './services/todos/api'
-import TodoCard from './components/TodoCard';
-import { PlusOutlined } from '@ant-design/icons'
-import { FloatButton } from 'antd';
-import TodoCreateModal from './components/TodoCreateModal';
-import TodoDeleteModal from './components/TodoDeleteModal';
+import { Button, Drawer } from 'antd';
+import Todos from './pages/Todos';
+import TodoDetail from './pages/TodoDetail';
+import {
+  Outlet,
+} from "react-router-dom";
 
-const App = () => {
-  const [todos, setTodos] = React.useState<API.Todo[]>([]);
-  const [modalVisible, setModalVisible] = React.useState(false);
+import { useAppDispatch, useAppSelector } from './redux/hooks';
+import drawerSlice from './redux/drawerSlice';
+import { Link } from 'react-router-dom';
+import 'tailwindcss/tailwind.css';
 
-  const deleteModal = React.useRef<React.ElementRef<typeof TodoDeleteModal>>()
 
-  const fetchData = () => {
-    apiGetTodos()
-      .then(response => {
-        setTodos(response.data);
-      })
-      .catch(error => {
-        console.log('Eror', error);
-      });
-  }
-  React.useEffect(() => {
-    fetchData()
-  }, [])
-  const handleCancel = () => {
-    setModalVisible(false);
-    deleteModal.current?.hide()
-  };
-  const handleOk = (data: API.TodoCreateForm) => {
-    fetchData()
+ 
+function App() {
+  const dispatch = useAppDispatch();
+  const isOpen = useAppSelector((state) => state.drawer.open);
 
-    setModalVisible(false);
-    deleteModal.current?.hide()
+  const showDrawer = () => {
+    dispatch(drawerSlice.actions.open());
   };
 
-  React.useEffect(() => {
-    fetchData();
-  }, []);
+  const onClose = () => {
+    dispatch(drawerSlice.actions.close());
+  };
 
   return (
-    <div className="container mx-auto p-2">
+    <>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        {todos.map((todo) => (
-          <TodoCard key={todo.id} instance={todo} fetchData={fetchData} onDeleteClick={() => {
-            deleteModal.current?.show(todo)
-          }} />
-        ))}
+      <Drawer
+        title="User"
+
+        placement='left'
+        onClose={onClose}
+        open={isOpen}
+      >
+        <div className='flex flex-col group-5'>
+          <Link className='font-medium text-blue-600 ' to="/"> Todos</Link>
+          <Link  className='font-medium  text-blue-600' to="/mytodos">My Todos</Link>
+          <Link  className='font-medium  text-blue-600 border-bottom-3' to="/favorite">Favorite</Link>
+          <Link  className='font-medium  text-blue-600 border-bottom-3'  to="/reminded">Reminded</Link>
+        </div>
+      </Drawer>
+      <div className='bg-blue-500 mb-4 min-w-full'>
+
+        <Button type="primary" onClick={showDrawer}>
+          Open
+
+        </Button>
       </div>
 
-      <FloatButton
-        shape="circle"
-        type="primary"
-        style={{ position: 'fixed', bottom: 20, right: 94 }}
-        icon={<PlusOutlined />}
-        onClick={() => setModalVisible(true)}
-
-      />
-      <TodoCreateModal
-        open={modalVisible}
-        onCancel={handleCancel}
-        onSubmit={handleOk}
-      />
-      <TodoDeleteModal ref={deleteModal as any} onSubmit={fetchData} />
-    </div>
+      <div className='mx-auto container p-2'>
+        <Outlet></Outlet>
+      </div>
+      {/* <RouterProvider router={router} /> */}
+    </>
   );
-};
+}
 
 export default App;

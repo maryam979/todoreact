@@ -11,9 +11,7 @@ declare namespace API {
     }
 
     type TodoUpdateForm = {
-        id:number;
         title: string
         content: string
-        public?:boolean
     }
-}
+} 

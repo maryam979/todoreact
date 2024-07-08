@@ -1,75 +1,79 @@
-
-import { Button, Modal } from 'antd';
-import { Input, notification } from 'antd';
+import { Button, Modal, Input, notification } from 'antd';
 import { useForm, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { apiPostTodo } from '../services/todos/api';
 import React from 'react';
 
-
-
-
-
 type Props = {
-  open: boolean;
-  onCancel: () => void;
   onSubmit: (data: API.Todo) => void;
 }
 
-/**
-props
-emits
-validation (yup)
-use service layer (api / types)
-notification
-manage busy points/cases
- */
+type Expose = {
+  show: () => void;
+  hide: () => void;
+}
 
-
-const TodoCreateModal = (props: Props) => {
+const TodoCreateModal = React.forwardRef<Expose, Props>((props, ref) => {
   const [api, contextHolder] = notification.useNotification()
-  const schema = yup.object({
+  const [open, setOpen] = React.useState(false)
+  const [formIsSubmitting, setFormIsSubmitting] = React.useState(false)
+  
+  const show = () => {
+    console.log("show ceate");
     
+    setOpen(true)
+  }
+
+  const hide = () => {
+    setOpen(false)
+  }
+
+  React.useImperativeHandle(ref, () => ({ show, hide }));
+
+  const schema = yup.object({
     title: yup.string().required(),
     content: yup.string().required(),
   })
-  const form = useForm<API.TodoCreateForm>({
+
+  const form = useForm({
     resolver: yupResolver(schema)
   })
-  const [formIsSubmitting, setFormIsSubmtting] = React.useState(false)
+
+ 
+
   const onSubmit = (data: API.TodoCreateForm) => {
-    setFormIsSubmtting(true)
+    setFormIsSubmitting(true)
     apiPostTodo(data)
       .then(res => {
         api.success({
-          message: 'Instance was created successfuly.',
+          message: 'Instance was created successfully.',
           placement: 'bottom'
         })
         props.onSubmit(res.data);
-      }).catch(() => {
+      })
+      .catch(() => {
         api.error({
-          message: 'Somethings wrong.',
+          message: 'Something went wrong.',
           placement: 'bottom'
         })
-      }).finally(() => {
-        setFormIsSubmtting(false)
+      })
+      .finally(() => {
+        setFormIsSubmitting(false)
+        hide();
       })
   };
+
   return (
-
-
-
     <Modal
-      open={props.open}
+      open={open}
       onCancel={() => {
-        if (!formIsSubmitting)
-          props.onCancel()
+        if (!formIsSubmitting) hide();
       }}
       onOk={() => form.handleSubmit(onSubmit)()}
       title="Create Todo"
       okText="Add"
-      afterClose={form.reset}
+      afterClose={() => form.reset()}
       cancelButtonProps={{
         disabled: formIsSubmitting
       }}
@@ -104,11 +108,8 @@ const TodoCreateModal = (props: Props) => {
           )}
         />
       </div>
-
-
     </Modal>
-
   );
-};
+});
 
 export default TodoCreateModal;

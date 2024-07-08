@@ -2,6 +2,7 @@
 import { Modal, notification } from 'antd';
 
 import { apiDeleteTodo, apiPostTodo } from '../services/todos/api';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 
@@ -25,6 +26,7 @@ const TodoDeleteModal = React.forwardRef<Expose,Props>((props,ref) => {
   const [open,setOpen] = React.useState(false)
 
   const [deleteIsSubmitting, setDeleteIsSubmitting] = React.useState(false)
+  const navigate = useNavigate();
 
   const show = (todo:API.Todo)=> {
     console.log(todo);
@@ -49,6 +51,7 @@ const TodoDeleteModal = React.forwardRef<Expose,Props>((props,ref) => {
           })
           props.onSubmit(res.data);
           hide()
+          navigate('/');
         }).catch(() => {
           api.error({
             message: 'Somethings wrong.',
