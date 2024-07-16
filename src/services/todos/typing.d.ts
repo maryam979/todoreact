@@ -3,15 +3,19 @@ declare namespace API {
         id: number;
         title: string;
         content: string;
+        image: string;
     }
 
     type TodoCreateForm = {
         title: string
         content: string
+        image: string;
     }
 
     type TodoUpdateForm = {
         title: string
         content: string
+        image: string;
     }
+    
 } 

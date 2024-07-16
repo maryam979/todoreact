@@ -7,6 +7,7 @@ import { Input, notification, Button } from 'antd';
 import { apiGetTodoDetails, apiUpdateTodo, apiDeleteTodo } from '../services/todos/api';
 import { useNavigate } from 'react-router-dom';
 import TodoDeleteModal from '../components/TodoDeleteModal';
+import { Image } from 'antd';
 
 const TodoDetail: React.FC = () => {
   const [instance, setInstance] = useState<API.Todo | null>(null);
@@ -85,10 +86,19 @@ const TodoDetail: React.FC = () => {
     }
   };
 
+
+
   return (
     <div className='flex justify-center items-center h-screen'>
       <div className="flex flex-col gap-2">
         <h2>Detail Todo</h2>
+        <Image
+          width={200}
+          src={instance?.image}
+          preview={{ src: instance?.image }}
+        />
+
+
         <Controller
           control={form.control}
           name="title"
@@ -101,7 +111,7 @@ const TodoDetail: React.FC = () => {
             </div>
           )}
         />
-  
+
         <Controller
           control={form.control}
           name="content"
@@ -114,7 +124,7 @@ const TodoDetail: React.FC = () => {
             </div>
           )}
         />
-        
+
         <div className="flex flex-row gap-2">
           <Button className='bg-green-600' onClick={form.handleSubmit(onSubmit)}>
             Update
@@ -125,7 +135,7 @@ const TodoDetail: React.FC = () => {
         </div>
       </div>
 
-    
+
       <TodoDeleteModal ref={deleteModal} onSubmit={(data) => console.log(data)} />
     </div>
   );

@@ -17,3 +17,4 @@ export const apiUpdateTodo = (id: number, data: API.TodoUpdateForm) => {
 export const apiGetTodoDetails = (id: number) => {
     return axiosInterceptor.get<API.Todo>(`/core/todos/${id}/`);
 };
+

@@ -3,6 +3,7 @@ import { Card, Button, Popover, ConfigProvider, Modal, notification } from 'antd
 import { MoreOutlined, DeleteOutlined, SmileOutlined } from '@ant-design/icons';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { Image } from 'antd';
 
 type TodoCardProps = {
   instance: API.Todo;
@@ -37,9 +38,25 @@ const TodoCard = (props: TodoCardProps) => {
 
   return (
     <Card
-    title={props.instance.title}  extra={<Link to={`/todo/${props.instance.id}`}><ArrowRightOutlined /></Link>}
-  >
+      title={props.instance.title} extra={<Link to={`/todo/${props.instance.id}`}><ArrowRightOutlined /></Link>}
+    >
+      <Image
+        width={200}
+        src={props.instance.image}
+        preview={{ src: props.instance.image }}
+      />
+
+
+
+
+
       <p>{props.instance.content}</p>
+
+
+
+
+
+
       <ConfigProvider>
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <Popover
